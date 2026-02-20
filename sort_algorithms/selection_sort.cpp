@@ -40,11 +40,14 @@ int main(int ac, char *av[])
         arr.reserve(ac - 1);
         for (size_t i = 1; i < ac; i++)
         {
-            string allowed = "-0123456789";
+            string allowed = "+-0123456789";
             string tmp = av[i];
+            char* rest;
             if (tmp.find_first_not_of(allowed) != string::npos)
                 throw invalid_argument("invalid input it must be number");
-            long nb = strtol(tmp.c_str(), NULL, 10);
+            long nb = strtol(tmp.c_str(), &rest, 10);
+            if (rest && *rest != '\0')
+                throw invalid_argument("invalid input it must be number");
             if (nb > INT_MAX || nb < INT_MIN)
                 throw invalid_argument("number cannot be INT_MAX or INT_MIN");
             arr.push_back(nb);

@@ -1,4 +1,4 @@
-#include <list>
+#include <vector>
 #include <iostream>
 #include <stdexcept>
 #include <cstring>
@@ -7,13 +7,13 @@
 
 using namespace std;
 
-void parsing(char **av, list<int> &arr)
+void parsing(char **av, vector<int> &arr)
 {
     char *rest = NULL;
     for (size_t i = 1; av[i]; i++)
     {
         long nb = strtol(av[i], &rest, 10);
-        if (rest == av[i] && *rest != '\0') // strtol let rest point to same memory address if string empty
+        if (rest == av[i] && *rest != '\0')
             throw invalid_argument("invalid input");
         if (nb < INT_MIN || nb > INT_MAX)
             throw invalid_argument("number out of integer range MAX and MIN");
@@ -21,36 +21,35 @@ void parsing(char **av, list<int> &arr)
     }
 }
 
-void insertion_sort(list<int>& arr)
+void merge_sort(vector<int> arr)
 {
-    list<int>::iterator it = arr.begin();
-    list<int>::iterator curr, tmp;
-
-    while (it != arr.end())
+    for (size_t i = 0; i < arr.size(); i++)
     {
-        curr = it;
-        ++it;
-        for (tmp = arr.begin(); tmp != it;)
-        {
-            if(*curr < *tmp)
-            {
-                arr.splice(tmp,arr,curr);
-                break;
-            }
-            ++tmp;
-        }
+        cout << arr[i] << ',';
     }
+    cout << endl;
+    if (arr.size() > 1)
+    {
+        size_t m = arr.size() / 2;
+        // if (m % 2 != 0)
+        //     m++;
+        vector<int> first(arr.begin(),arr.begin() + m);
+        vector<int> second(arr.begin()+ m ,arr.end());
+        merge_sort(first);
+        merge_sort(second);
+    }
+    
 }
 
 int main(int ac, char *av[])
 {
-    list<int> arr;
+    vector<int> arr;
     try
     {
         if (ac < 3)
             throw invalid_argument("enter at least 2 numbers");
         parsing(av, arr);
-        insertion_sort(arr);
+        merge_sort(arr);
         if (is_sorted(arr.begin(), arr.end()))
             cout << "array sorted successfully\n";
         else

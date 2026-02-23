@@ -1,45 +1,57 @@
 #include <vector>
+#include <string>
 #include <iostream>
-#include <stdexcept>
 #include <cstring>
 #include <limits.h>
+#include <stdexcept>
 #include <algorithm>
 
 using namespace std;
 
-void parsing(char **av, vector<int>& vec)
+void selection_sort(vector<int>& vec)
 {
-    char *rest = NULL;
-    for (size_t i = 1; av[i]; i++)
+    vector<int>::iterator it = vec.begin();
+    vector<int>::iterator start = vec.begin();
+    vector<int>::iterator min;
+
+    for (; it != vec.end() - 1;it++)
     {
-        long nb = strtol(av[i],&rest,10);
-        if (rest && *rest != '\0')
-            throw invalid_argument("invalid input");
-        if (nb < INT_MIN || nb > INT_MAX)
-            throw invalid_argument("number out of integer range MAX and MIN");
-        vec.push_back(static_cast<int>(nb));
+        min = min_element(it,vec.end());
+        swap(*it,*min);
     }
 }
 
-
-
 int main(int ac, char *av[])
 {
-    vector<int> vec;
+    vector<int> arr;
     try
     {
         if (ac < 3)
-            throw invalid_argument("enter at least 2 numbers");
-        vec.reserve(ac-1);
-        parsing(av,vec);
-        
-        if (is_sorted(vec.begin(),vec.end()))
-            cout << "array sorted successfully\n";
-        else
-            cout << "array not sorted\n";
+            throw invalid_argument("enter at least 2 numbers as argement for sorting");
+        arr.reserve(ac - 1);
+        for (size_t i = 1; i < ac; i++)
+        {
+            string tmp = av[i];
+            char* rest;
+            long nb = strtol(tmp.c_str(), &rest, 10);
+            if (rest && *rest != '\0')
+                throw invalid_argument("invalid input it must be number");
+            if (nb > INT_MAX || nb < INT_MIN)
+                throw invalid_argument("number cannot be INT_MAX or INT_MIN");
+            arr.push_back(nb);
+        }
     }
     catch (const exception &e)
     {
-        cout << e.what() << '\n';
+        cerr << e.what() << "\n";
+        return 1;
     }
+    selection_sort(arr);
+    for (size_t i = 0; i < arr.size(); i++)
+    {
+        cout << arr[i] << '\t';
+    }
+    cout << endl;
+    
+    return 0;
 }

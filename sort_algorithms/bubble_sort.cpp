@@ -21,7 +21,22 @@ void parsing(char **av, vector<int>& vec)
     }
 }
 
-
+void bubble_sort(vector<int>& array)
+{
+    size_t len = array.size();
+    for (size_t n = 0; n < len; n++)
+    {
+        for (size_t i = 0; i < len - n; i++)
+        {
+            if (i + 1 < len && array[i] > array[i + 1])
+            {
+                int tmp = array[i];
+                array[i] = array[i + 1];
+                array[i + 1] = tmp;
+            }
+        }
+    }
+}
 
 int main(int ac, char *av[])
 {
@@ -32,7 +47,7 @@ int main(int ac, char *av[])
             throw invalid_argument("enter at least 2 numbers");
         vec.reserve(ac-1);
         parsing(av,vec);
-        
+        bubble_sort(vec);
         if (is_sorted(vec.begin(),vec.end()))
             cout << "array sorted successfully\n";
         else

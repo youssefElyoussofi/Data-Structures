@@ -21,24 +21,38 @@ void parsing(char **av, vector<int> &arr)
     }
 }
 
-void merge_sort(vector<int> arr)
+void merge_sort(vector<int> &arr)
 {
-    for (size_t i = 0; i < arr.size(); i++)
+    if (arr.size() <= 1)
+        return;
+    size_t mid = arr.size() / 2;
+    vector<int> first(arr.begin(), arr.begin() + mid);
+    vector<int> second(arr.begin() + mid, arr.end());
+
+    merge_sort(first);
+    merge_sort(second);
+
+    vector<int> sorted;
+    sorted.reserve(first.size() + second.size());
+    auto it1 = first.begin(), it2 = second.begin();
+    while (it1 != first.end() && it2 != second.end())
     {
-        cout << arr[i] << ',';
+        if (*it1 < *it2)
+        {
+            sorted.push_back(*it1);
+            it1++;
+        }
+        else
+        {
+            sorted.push_back(*it2);
+            it2++;
+        }
     }
-    cout << endl;
-    if (arr.size() > 1)
-    {
-        size_t m = arr.size() / 2;
-        // if (m % 2 != 0)
-        //     m++;
-        vector<int> first(arr.begin(),arr.begin() + m);
-        vector<int> second(arr.begin()+ m ,arr.end());
-        merge_sort(first);
-        merge_sort(second);
-    }
-    
+    if (it1 != first.end())
+        sorted.insert(sorted.end(), it1, first.end());
+    if (it2 != second.end())
+        sorted.insert(sorted.end(), it2, second.end());
+    arr = sorted;
 }
 
 int main(int ac, char *av[])
@@ -58,5 +72,10 @@ int main(int ac, char *av[])
     catch (const exception &e)
     {
         cout << e.what() << '\n';
+    }
+
+    for (auto it = arr.begin(); it != arr.end(); it++)
+    {
+        cout << *it << ',';
     }
 }

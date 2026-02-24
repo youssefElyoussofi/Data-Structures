@@ -48,10 +48,11 @@ void merge_sort(vector<int> &arr)
             it2++;
         }
     }
-    if (it1 != first.end())
-        sorted.insert(sorted.end(), it1, first.end());
-    if (it2 != second.end())
-        sorted.insert(sorted.end(), it2, second.end());
+    // no need to check for left data in our vectors
+    // the insert is smart it's check if iterator __first same as iterator __last
+    // do nothing
+    sorted.insert(sorted.end(), it1, first.end());
+    sorted.insert(sorted.end(), it2, second.end());
     arr = sorted;
 }
 
